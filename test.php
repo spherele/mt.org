@@ -29,9 +29,14 @@ echo "<pre>";
 echo "</pre>";
 
 
-$map = new Mapper(4);
+$map = new Mapper('Orders');
 
 $res = $map->getList([], ['ID', 'UF_NAME', 'UF_COUNT', 'UF_CODE', 'UF_ACTIVE']);
+
+echo "<pre>";
+   print_r($res);
+echo "</pre>";
+
 
 $arr = new Helper();
 
@@ -39,7 +44,7 @@ $resJson = $arr->phpToJson($res);
 
 
 try {
-    $phpArray = Helper::jsonToPhp('data1.json');
+    $phpArray = Helper::jsonToPhp('data.json');
 } catch (Exception $e) {
     echo "Произошла ошибка: " . $e->getMessage();
 }

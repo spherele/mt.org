@@ -1,28 +1,29 @@
 <?php
 
-use Bitrix\Main\ArgumentException;
+
 use Bitrix\Main\Loader;
 use Bitrix\Highloadblock as HL;
-use Bitrix\Main\Entity;
 use Bitrix\Main\LoaderException;
-use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 
-class Mapper
+class Mapper extends HighloadController
 {
-    private $hlblockId;
+    private string $entityName;
     private $entityDataClass;
 
-    public function __construct($hlblockId)
+    /**
+     * @throws LoaderException
+     * @throws SystemException
+     */
+    public function __construct($entityName)
     {
-        $this->hlblockId = $hlblockId;
+        parent::__construct($entityName);
+        $this->entityName = $entityName;
         $this->init();
     }
 
     /**
      * @throws LoaderException
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
      * @throws SystemException
      * @throws Exception
      */
@@ -30,13 +31,14 @@ class Mapper
     {
         Loader::includeModule("highloadblock");
 
-        $hlblock = HL\HighloadBlockTable::getById($this->hlblockId)->fetch();
+        $filter = array('=NAME' => $this->entityName);
+        $hlblock = HL\HighloadBlockTable::getList(array('filter' => $filter))->fetch();
 
         if ($hlblock) {
             $entity = HL\HighloadBlockTable::compileEntity($hlblock);
             $this->entityDataClass = $entity->getDataClass();
         } else {
-            throw new \Exception("Highload блок с ID {$this->hlblockId} не найден.");
+            throw new \Exception("Highload block with name '{$this->entityName}' not found.");
         }
     }
 
