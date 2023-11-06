@@ -1,52 +1,45 @@
 <?php
 
 
-use Bitrix\Main\Loader;
-use Bitrix\Highloadblock as HL;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\LoaderException;
+use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 
 class Mapper extends HighloadController
 {
-    private string $entityName;
-    private $entityDataClass;
-
-    /**
-     * @throws LoaderException
-     * @throws SystemException
-     */
     public function __construct($entityName)
     {
         parent::__construct($entityName);
-        $this->entityName = $entityName;
-        $this->init();
     }
 
     /**
+     * @throws ArgumentException
      * @throws LoaderException
+     * @throws ObjectPropertyException
      * @throws SystemException
-     * @throws Exception
      */
-    private function init(): void
+    public function init(): void
     {
-        Loader::includeModule("highloadblock");
-
-        $filter = array('=NAME' => $this->entityName);
-        $hlblock = HL\HighloadBlockTable::getList(array('filter' => $filter))->fetch();
-
-        if ($hlblock) {
-            $entity = HL\HighloadBlockTable::compileEntity($hlblock);
-            $this->entityDataClass = $entity->getDataClass();
-        } else {
-            throw new \Exception("Highload block with name '{$this->entityName}' not found.");
-        }
+        parent::init();
     }
 
-    public function getById($id)
+
+    /**
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     * @throws ArgumentException
+     */
+    public function getById($id): bool|array
     {
         return $this->entityDataClass::getById($id)->fetch();
     }
 
+    /**
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     * @throws ArgumentException
+     */
     public function getList($filter = array(), $select = array()): array
     {
         $params = array(
@@ -64,19 +57,28 @@ class Mapper extends HighloadController
         return $items;
     }
 
-    public function add($data)
+    /**
+     * @throws Exception
+     */
+    public function add($data): array|int
     {
         $result = $this->entityDataClass::add($data);
         return $result->getId();
     }
 
-    public function update($id, $data)
+    /**
+     * @throws Exception
+     */
+    public function update($id, $data): bool
     {
         $result = $this->entityDataClass::update($id, $data);
         return $result->isSuccess();
     }
 
-    public function delete($id)
+    /**
+     * @throws Exception
+     */
+    public function delete($id): bool
     {
         return $this->entityDataClass::delete($id)->isSuccess();
     }

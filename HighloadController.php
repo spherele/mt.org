@@ -1,39 +1,56 @@
 <?php
 
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Loader;
 use Bitrix\Highloadblock as HLBL;
 use Bitrix\Main\Entity;
 use Bitrix\Main\LoaderException;
+use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 
 
 class HighloadController
 {
-    private $entityName;
+    protected string $entityName;
+    protected string|null|Entity\DataManager $entityDataClass = null;
 
     /**
+     * @param $entityName
+     * @throws ArgumentException
      * @throws LoaderException
+     * @throws ObjectPropertyException
+     * @throws SystemException
      */
     public function __construct($entityName)
     {
-
         $this->entityName = $entityName;
-
-        try {
-            Loader::includeModule("highloadblock");
-        }catch (LoaderException $e){
-
-            throw new LoaderException($e->getMessage());
-
-        }
+        $this->init();
     }
 
     /**
-     * @return mixed
+     * @throws LoaderException
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     * @throws Exception
      */
-    public function getEntityName(): mixed
+    protected function init(): void
     {
-        return $this->entityName;
+        try {
+            Loader::includeModule("highloadblock");
+
+            $filter = array('=NAME' => $this->entityName);
+            $hlblock = HLBL\HighloadBlockTable::getList(array('filter' => $filter))->fetch();
+
+            if ($hlblock) {
+                $entity = HLBL\HighloadBlockTable::compileEntity($hlblock);
+                $this->entityDataClass = $entity->getDataClass();
+            } else {
+                throw new \Exception("Highload block with name '{$this->entityName}' not found.");
+            }
+        } catch (LoaderException $e) {
+            throw new LoaderException($e->getMessage());
+        }
     }
 
     /**
