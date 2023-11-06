@@ -46,7 +46,7 @@ class HighloadController
                 $entity = HLBL\HighloadBlockTable::compileEntity($hlblock);
                 $this->entityDataClass = $entity->getDataClass();
             } else {
-                throw new \Exception("Highload block with name '{$this->entityName}' not found.");
+                throw new \Exception("Хайлоад блок с именем '{$this->entityName}' не найден.");
             }
         } catch (LoaderException $e) {
             throw new LoaderException($e->getMessage());
