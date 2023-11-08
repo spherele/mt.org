@@ -36,7 +36,6 @@ $res = $map->getList([], ['ID', 'UF_NAME', 'UF_COUNT', 'UF_CODE', 'UF_ACTIVE']);
 
 echo "<pre>";
     print_r($res);
-    print_r($id);
 echo "</pre>";
 
 
