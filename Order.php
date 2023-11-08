@@ -30,7 +30,7 @@ class Order extends HighloadController
         $params = [
             'select' => $select,
             'filter' => $filter,
-            'order' => $order,
+            'order' => $order
         ];
 
         $result = $this->entityDataClass::getList($params);
