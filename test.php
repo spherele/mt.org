@@ -1,6 +1,8 @@
+
+
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_before.php");
+require($_SERVER["DOCUMENT_ROOT"] . '/bitrix/header.php');
 require 'Order.php';
 require 'Mapper.php';
 require 'Helper.php';
@@ -18,7 +20,6 @@ echo "<pre>";
    //print_r($addResult);
 echo "</pre>";
 
-
 $filter = [
     "UF_ACTIVE" => '0'
 ];
@@ -34,7 +35,8 @@ $map = new Mapper('Orders');
 $res = $map->getList([], ['ID', 'UF_NAME', 'UF_COUNT', 'UF_CODE', 'UF_ACTIVE']);
 
 echo "<pre>";
-   print_r($res);
+    print_r($res);
+    print_r($id);
 echo "</pre>";
 
 
@@ -44,15 +46,17 @@ $resJson = $arr->phpToJson($res);
 
 
 try {
-    $phpArray = Helper::jsonToPhp('data.json');
+    //$phpArray = Helper::jsonToPhp('data.json');
 } catch (Exception $e) {
-    echo "Произошла ошибка: " . $e->getMessage();
+    //echo "Произошла ошибка: " . $e->getMessage();
 }
 
 
 echo "<pre>";
-    print_r($resJson);
-    print_r($phpArray);
+    //print_r($resJson);
+    //print_r($phpArray);
 echo "</pre>";
 
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_after.php");
+
+?>

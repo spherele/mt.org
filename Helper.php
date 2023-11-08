@@ -10,6 +10,10 @@ class Helper
 
         if (file_put_contents($filePath, $jsonData) !== false) {
             echo "Данные успешно записаны в файл : ".$filePath;
+            echo "<pre>";
+               print_r($jsonData);
+            echo "</pre>";
+
         } else {
             echo "Ошибка при записи данных в файл.";
         }
